@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Blockchain Tracer</title>
+  <link rel="stylesheet" href="scripts/libs/materialize.min.css" />
+  <link rel="stylesheet" href="scripts/libs/icons.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <div id="ui" class="container row">
+    <div class="app-container">
+      <h1 className="app-title">Cryptocurrency Transaction Tracker</h1>
+      <form id="addressForm" class="input-form" onsubmit="event.preventDefault(); trace(this[0].value)">
+        <input type="text" id="hash" placeholder="Enter Transaction ID, Address" className="input-box"
+          name="transaction_id" />
+
+        <div class="row">
+          <button type="submit" name="action" class="ui-btn" role="button">
+            <span> Submit </span>
+          </button>
+
+          <button type="submit" name="action" class="ui-btn" role="button" onclick="downloadData()">
+            <span> Download </span>
+          </button>
+        </div>
+      </form>
+    </div>
+    <input type="checkbox" checked
+      onchange="this.checked ? simulation.velocityDecay(0.97) : simulation.velocityDecay(0.5)" />
+  </div>
+  </div>
+  </div>
+
+  <div class="canvas-container">
+    <svg id="canvas" class="canvas-box"></svg>
+  </div>
+
+  <div id="tooltip" class="card">
+    <div class="card-content">
+      <h6 id="tooltip-title">Unknown</h6>
+      <p id="tooltip-value">Unknown</p>
+      <p><strong>Transaction ID:</strong></p>
+      <p id="tooltip-hash">Unknown</p>
+
+    </div>
+    <div class="card-tabs">
+      <ul class="tabs tabs-fixed-width">
+        <li class="tab">
+          <a href="#tooltip-all" class="active"><span id="tooltip-allcount"></span> Total</a>
+        </li>
+        <li class="tab">
+          <a href="#tooltip-in"><span id="tooltip-incount"></span> Incoming</a>
+        </li>
+        <li class="tab">
+          <a href="#tooltip-out"><span id="tooltip-outcount"></span> Outgoing</a>
+        </li>
+      </ul>
+    </div>
+    <div class="card-content grey lighten-4" id="tooltip-body">
+      <div id="tooltip-log"></div>
+    </div>
+  </div>
+
+  <!-- Dropdown Structure -->
+  <ul id="dropdown" class="dropdown-content">
+    <li>
+      <a href="javascript:copyToClipboard(window.location); M.toast({html: 'Copied to Clipboard'})">Share<i
+          class="material-icons left">share</i></a>
+    </li>
+    <li>
+      <a href="javascript:saveSvg(document.getElementById('canvas'), 'graph.svg')">Graph<i
+          class="material-icons left">file_download</i></a>
+    </li>
+    <li>
+      <a href="javascript:saveText(JSON.stringify([nodes, links]), 'data.json');">Data<i
+          class="material-icons left">file_download</i></a>
+    </li>
+    <li class="divider" tabindex="-1"></li>
+    <li>
+      <a href="https://mattconsto.github.io/blockchain-tracer/report.pdf" target="_blank">Report<i
+          class="material-icons left">launch</i></a>
+    </li>
+    <li>
+      <a href="#modal-help" class="modal-trigger">Help<i class="material-icons left">help_outline</i></a>
+    </li>
+    <li>
+      <a href="#modal-about" class="modal-trigger">About<i class="material-icons left">info_outline</i></a>
+    </li>
+    <li class="divider" tabindex="-1"></li>
+    <li>
+      <a href="#">Close<i class="material-icons left">close</i></a>
+    </li>
+  </ul>
+</body>
+<script>
+  if (
+    /MSIE (\d+\.\d+);/.test(navigator.userAgent) ||
+    navigator.userAgent.indexOf("Trident/") > -1
+  ) {
+    document.getElementsByTagName("body")[0].style.display = "none";
+    alert("Please upgrade to a modern browser to use Blockchain Tracer");
+  }
+
+  function downloadData() {
+    var fileName = document.getElementById("hash").value + ".json";
+    var data =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify([nodes, links, doc_hash]));
+
+    var anchorElement = document.createElement("a");
+    anchorElement.setAttribute("href", data);
+    anchorElement.setAttribute("download", fileName);
+    anchorElement.click();
+  }
+</script>
+<script src="scripts/libs/d3.v4.min.js"></script>
+<script src="scripts/libs/materialize.min.js"></script>
+<script src="scripts/graph.js"></script>
+<script src="scripts/blockchain.js"></script>
+<script src="scripts/tags.json"></script>
+<script src="scripts/init.js"></script>
+
+</html>
